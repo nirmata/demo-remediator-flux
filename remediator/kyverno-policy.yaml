@@ -1,7 +1,7 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: disallow-privileged-containers
+  name: flux-demo-disallow-privileged
   labels:
     # This label connects the policy to the Remediator.
     # The Remediator's policySelector filters on this label.

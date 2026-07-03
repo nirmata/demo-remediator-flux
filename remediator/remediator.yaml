@@ -20,13 +20,6 @@ spec:
           - nginx-app
 
   remediation:
-    # Only scan policies labelled with this category.
-    # Matches the label on remediator/kyverno-policy.yaml.
-    filters:
-      policySelector:
-        matchLabels:
-          nirmata.io/remediation-category: security
-
     # Run every 5 minutes for the demo.
     triggers:
       - schedule:
