@@ -1,0 +1,23 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nginx-app
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: demo-remediator-flux
+    # namespace is omitted — GitRepository is in the same namespace (flux-system)
+  path: ./apps/nginx
+  prune: true
+  # targetNamespace is REQUIRED for the Remediator to know which namespace to scan.
+  # This forces all resources in apps/nginx into the "nginx" namespace.
+  targetNamespace: nginx
+  # Creates the namespace automatically if it does not exist.
+  postBuild:
+    substitute: {}
+---
+# Namespace must exist before Kustomization applies resources.
+# Create it separately or use a Kustomization with createNamespace via a patch.
+# Simplest approach for the demo: create namespace manually (see setup guide).

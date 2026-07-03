@@ -1,0 +1,47 @@
+apiVersion: serviceagents.nirmata.io/v1alpha1
+kind: Remediator
+metadata:
+  name: nginx-flux-remediator
+  namespace: nirmata
+spec:
+  # fluxHub: Remediator discovers workloads by reading Flux Kustomization CRs.
+  environment:
+    type: fluxHub
+
+  target:
+    fluxHub:
+      # fluxNamespace is where Flux controllers are installed.
+      fluxNamespace: flux-system
+
+      kustomizationSelector:
+        # Target the specific Kustomization that deploys our nginx app.
+        # This matches metadata.name of the Kustomization in flux/kustomization.yaml.
+        names:
+          - nginx-app
+
+  remediation:
+    # Only scan policies labelled with this category.
+    # Matches the label on remediator/kyverno-policy.yaml.
+    filters:
+      policySelector:
+        matchLabels:
+          nirmata.io/remediation-category: security
+
+    # Run every 5 minutes for the demo.
+    triggers:
+      - schedule:
+          crontab: "*/5 * * * *"
+
+    llmConfigRef:
+      name: remediator-agent-llm
+      namespace: nirmata
+
+    gitCredentials:
+      name: github-tool
+      namespace: nirmata
+
+    actions:
+      - type: CreatePR
+        toolRef:
+          name: github-tool
+          namespace: nirmata

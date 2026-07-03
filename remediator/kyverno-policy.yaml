@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-privileged-containers
+  labels:
+    # This label connects the policy to the Remediator.
+    # The Remediator's policySelector filters on this label.
+    nirmata.io/remediation-category: security
+spec:
+  background: true
+  rules:
+    - name: disallow-privileged-containers
+      match:
+        any:
+        - resources:
+            kinds:
+              - Pod
+      validate:
+        message: "Privileged mode is disallowed. Set securityContext.privileged to false."
+        pattern:
+          spec:
+            containers:
+              - =(securityContext):
+                  =(privileged): "false"

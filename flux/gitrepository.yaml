@@ -1,0 +1,18 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: demo-remediator-flux
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/nirmata/demo-remediator-flux
+  ref:
+    branch: main
+  # secretRef is needed only if the repository is private.
+  # Create the secret first:
+  #   kubectl create secret generic github-creds \
+  #     --namespace flux-system \
+  #     --from-literal=username=<your-github-username> \
+  #     --from-literal=password=<your-github-pat>
+  # secretRef:
+  #   name: github-creds

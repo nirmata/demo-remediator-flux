@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: unconfined
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+      - name: host-vol
+        hostPath:
+          path: /etc
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+          hostPort: 80
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+            - SYS_ADMIN

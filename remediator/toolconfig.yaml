@@ -1,0 +1,20 @@
+apiVersion: serviceagents.nirmata.io/v1alpha1
+kind: ToolConfig
+metadata:
+  name: github-tool
+  namespace: nirmata
+spec:
+  type: github
+  credentials:
+    method: pat
+    pat:
+      tokenSecretRef:
+        name: github-pat-secret
+        namespace: nirmata
+        key: token
+  defaults:
+    git:
+      pullRequests:
+        branchPrefix: "remediator-flux"
+        titleTemplate: "fix: remediate policy violation in %s"
+        commitMessageTemplate: "fix: remediate policy violation in %s"
