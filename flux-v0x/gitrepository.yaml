@@ -1,0 +1,21 @@
+# GitRepository for Flux 0.x clusters (Flux v0.18 through v0.41)
+# Uses v1beta2 — the API version available on pre-GA Flux.
+# On Flux 2.x clusters, use flux/gitrepository.yaml (v1) instead.
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: demo-remediator-flux
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/nirmata/demo-remediator-flux
+  ref:
+    branch: main
+  # secretRef is needed only if the repository is private.
+  # Create the secret first:
+  #   kubectl create secret generic github-creds \
+  #     --namespace flux-system \
+  #     --from-literal=username=<your-github-username> \
+  #     --from-literal=password=<your-github-pat>
+  # secretRef:
+  #   name: github-creds

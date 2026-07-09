@@ -1,0 +1,23 @@
+# Kustomization for Flux 0.x clusters (Flux v0.18 through v0.41)
+# Uses v1beta2 — the API version available on pre-GA Flux.
+# On Flux 2.x clusters, use flux/kustomization.yaml (v1) instead.
+#
+# Spec fields used by the Remediator are identical in v1beta2 and v1:
+#   spec.sourceRef, spec.path, spec.targetNamespace, spec.kubeConfig
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: nginx-app
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: demo-remediator-flux
+    # namespace omitted — GitRepository is in the same namespace (flux-system)
+  path: ./apps/nginx
+  prune: true
+  # targetNamespace is REQUIRED for the Remediator to know which namespace to scan.
+  # It forces all resources in apps/nginx/ into the "nginx" namespace.
+  # Create the namespace first: kubectl create namespace nginx
+  targetNamespace: nginx
